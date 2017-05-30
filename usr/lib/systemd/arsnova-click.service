@@ -1,0 +1,20 @@
+[Unit]
+Description=Start script for arsnova.click
+After=network.target
+
+[Service]
+Type=forking
+Environment=MONGO_URL=mongodb://meteor:meteor@localhost/arsnova_click
+Environment=NODE_ENV=production
+Environment=PORT=3000
+Environment=ROOT_URL=http://arsnova.lan
+Environment='METEOR_SETTINGS={"public": {"cas": {"loginUrl": "https://cas.thm.de/cas/login","serviceParam": "service","popupWidth": 810,"popupHeight": 610},"default": {"productTourEnabled": false,"theme": "theme-Material","question": {"text": "","timer": 60,"multipleSurveySelectionEnabled": false},"answers": {"text": "","displayAnswerTextOnButtons": false},"sessionConfiguration": {"readingConfirmationEnabled": false,"showResponseProgress": false,"confidenceSliderEnabled": true,"music": {"isUsingGlobalVolume": false,"lobbyEnabled": false,"lobbyTitle": "Song2","lobbyVolume": 50,"countdownRunningEnabled": false,"countdownRunningTitle": "Song1","countdownRunningVolume": 80,"countdownEndEnabled": true,"countdownEndTitle": "Song1","countdownEndVolume": 100},"nicks": {"blockIllegalNames": true,"restrictToCASLogin": false}}}},"cas": {"baseUrl": "https://cas.thm.de/cas","autoClose": true},"serverStartup": {"verbose": true}}'
+WorkingDirectory=/home/pi/build/bundle
+ExecStart=/bin/bash -c "/usr/bin/forever start --debug --pidFile /home/pi/arsnova.pid /home/pi/build/bundle/main.js ; sudo systemctl restart nginx.service"
+ExecStop=/usr/bin/forever stop /home/pi/build/bundle/main.js
+PIDFile=/home/pi/arsnova.pid
+User=pi
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
