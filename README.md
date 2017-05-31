@@ -1,3 +1,17 @@
+# Installation mit Skript
+ARSnova.click kann mit dem Installationsskript voll automatisch installiert
+werden. Dafür müssen die folgenden Schritte ausgeführt werden.
+
+   `sudo apt-get update`
+
+   `sudo apt-get insall git`
+
+   `git clone https://git.thm.de/arsnova/arsnova-router.git`
+
+   `cd arsnova-router`
+
+   `./install`
+
 # Manuelle Einrichtung eines Raspberry Pi mit ARSnova.click
 Hier wird erklärt wie ein Raspberry Pi mit ARSnova.click eingerichtet wird.
 Dabei wird Schritt für Schritt gezeigt was nötig ist für die Einrichtung.
