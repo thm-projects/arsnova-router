@@ -18,12 +18,6 @@ werden. Dafür müssen die folgenden Schritte ausgeführt werden.
 
    `./install`
 
-Der letzte Schritt erfordert eine Änderung in der Konfiguration von Nginx.
-Dabei muss die Datei `/etc/nginx/sites-available/meteor` mit einem Editor
-geöffnet werden. Die Zeile `server_name yourdomain.com;` muss zu
-`server_name _;` geändert werden (Zwischen server_name und _ (Unterstrich) ist
-ein Leerzeichen).
-
 # Manuelle Einrichtung eines Raspberry Pi mit ARSnova.click
 Hier wird erklärt wie ein Raspberry Pi mit ARSnova.click eingerichtet wird.
 Dabei wird Schritt für Schritt gezeigt was nötig ist für die Einrichtung.
