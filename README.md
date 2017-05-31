@@ -2,6 +2,12 @@
 ARSnova.click kann mit dem Installationsskript voll automatisch installiert
 werden. Dafür müssen die folgenden Schritte ausgeführt werden.
 
+   `sudo useradd -U -m -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio arsnova`
+
+   `echo -e "{Passwort}\n{Passwort}\n" | sudo passwd arsnova`
+
+   `su arsnova`
+
    `sudo apt-get update`
 
    `sudo apt-get insall git`
@@ -11,6 +17,12 @@ werden. Dafür müssen die folgenden Schritte ausgeführt werden.
    `cd arsnova-router`
 
    `./install`
+
+Der letzte Schritt erfordert eine Änderung in der Konfiguration von Nginx.
+Dabei muss die Datei `/etc/nginx/sites-available/meteor` mit einem Editor
+geöffnet werden. Die Zeile `server_name yourdomain.com;` muss zu
+`server_name _;` geändert werden (Zwischen server_name und _ (Unterstrich) ist
+ein Leerzeichen).
 
 # Manuelle Einrichtung eines Raspberry Pi mit ARSnova.click
 Hier wird erklärt wie ein Raspberry Pi mit ARSnova.click eingerichtet wird.
