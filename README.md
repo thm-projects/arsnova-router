@@ -116,7 +116,7 @@ Dabei wird Schritt für Schritt gezeigt was nötig ist für die Einrichtung.
 
    `sudo mv meteor /etc/nginx/sites-available`
 
-   `ln -s /etc/nginx/sites-enabled/meteor  /etc/nginx/sites-available/meteor`
+   `ln -s /etc/nginx/sites-available/meteor /etc/nginx/sites-enabled/meteor`
 
    `sudo rm  /etc/nginx/sites-enabled/default`
 
