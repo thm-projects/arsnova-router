@@ -1,5 +1,10 @@
 #!/bin/bash
 
+echo "=== Set right sudo premissions for systemd ==="
+echo "arsnova ALL=(ALL) NOPASSWD: ALL" > 011_arsnova-nopasswd
+sudo mv 011_arsnova-nopasswd /etc/sudoers.d/011_arsnova-nopasswd
+sudo chown root:root /etc/sudoers.d/011_arsnova-nopasswd
+
 echo "=== Install NodeJS ==="
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt-get install nodejs

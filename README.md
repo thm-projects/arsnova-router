@@ -8,6 +8,8 @@ werden. Dafür müssen die folgenden Schritte ausgeführt werden.
 
    `su arsnova`
 
+   `cd` (Zum Wurzelverzeichniss von arsnova wechseln)
+
    `sudo apt-get update`
 
    `sudo apt-get insall git`
