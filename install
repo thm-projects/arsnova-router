@@ -2,11 +2,11 @@
 
 echo "=== Set right sudo premissions for systemd ==="
 echo "arsnova ALL=(ALL) NOPASSWD: ALL" > 011_arsnova-nopasswd
-sudo chown root:root /etc/sudoers.d/011_arsnova-nopasswd
+sudo chown root:root 011_arsnova-nopasswd
 sudo mv 011_arsnova-nopasswd /etc/sudoers.d/011_arsnova-nopasswd
 sudo bash -c 'echo "arsnova" > /etc/hostname'
-sudo hostname arsnova
 sudo sed -i 's/raspberrypi/arsnova/' /etc/hosts
+sudo hostname arsnova
 
 echo "=== Install NodeJS ==="
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
