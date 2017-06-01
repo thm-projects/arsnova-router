@@ -2,15 +2,23 @@
 
 echo "=== Set right sudo premissions for systemd ==="
 echo "arsnova ALL=(ALL) NOPASSWD: ALL" > 011_arsnova-nopasswd
-sudo mv 011_arsnova-nopasswd /etc/sudoers.d/011_arsnova-nopasswd
 sudo chown root:root /etc/sudoers.d/011_arsnova-nopasswd
+sudo mv 011_arsnova-nopasswd /etc/sudoers.d/011_arsnova-nopasswd
+sudo bash -c 'echo "arsnova" > /etc/hostname'
+sudo hostname arsnova
+sudo sed -i 's/raspberrypi/arsnova/' /etc/hosts
 
 echo "=== Install NodeJS ==="
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt-get install nodejs
 sudo npm install forever fibers underscore source-map-support semver -g
+cd ..
 npm install forever fibers underscore source-map-support semver
-sudo mv node_modules /home/arsnova
+cd arsnova-router
+
+# it is very importend this symlink is set, otherwise the application can not be
+# started
+sudo ln -s /home/arsnova/build/bundle/programs/server/npm/node_modules/phantomjs/ /opt/phantomjs
 
 echo "=== Install and configure MongoDB ==="
 sudo apt-get install mongodb
@@ -24,29 +32,28 @@ echo "=== Install and configure Nginx ==="
 sudo useradd -m meteor
 sudo mkdir /home/meteor/logs
 sudo chown meteor:meteor /home/meteor/logs/
-sudo bash -c 'echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/sources.list'
+sudo bash -c 'echo "deb http://ftp.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/backports.list'
 sudo apt-get update
 sudo apt-get -t jessie-backports install nginx-full
 wget https://git.thm.de/arsnova/arsnova.click/raw/server-config/config/app-server/etc/nginx/sites-available/meteor
 sed -i 's/yourdomain.com/\_/' meteor
 sudo mv meteor /etc/nginx/sites-available
 sudo ln -s /etc/nginx/sites-available/meteor /etc/nginx/sites-enabled/meteor
-sudo rm /etc/nginx/sites-enabled/default 
+sudo rm /etc/nginx/sites-enabled/default
 sudo systemctl enable nginx.service
 sudo systemctl start nginx.service
 systemctl status nginx.service
 
 echo "=== Install ARSnova.click ==="
 wget https://git.thm.de/arsnova/arsnova.click/builds/artifacts/master/download?job=build -O artifacts.zip
-unzip artifacts.zip -d .
+unzip artifacts.zip -d /home/arsnova
 rm artifacts.zip
-sudo mv build /home/arsnova
 
 ## The content of this file need to be inside of the systemd start sccript
 #wget https://git.thm.de/arsnova/arsnova.click/raw/staging/arsnova.click/settings.json
 ##
 
-sudo cp usr/lib/systemd/system/arsnova-click.service /etc/systemd/system/arsnova-click.service
+sudo cp usr/lib/systemd/system/arsnova-click.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable arsnova-click.service
 systemctl status arsnova-click.service
@@ -60,6 +67,6 @@ sudo apt-get dist-upgrade
 
 sudo cp etc/dhcpcd.conf /etc/
 
+# after the system update a reboot is recommended
 sudo reboot
 
-exit
