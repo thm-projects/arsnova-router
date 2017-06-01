@@ -53,7 +53,7 @@ Dabei wird Schritt für Schritt gezeigt was nötig ist für die Einrichtung.
    Jetzt müssen alle nötigen Erweiterungen NodeJS-Erweiterung installiert
    werden.
 
-   `npm install forever fibers underscore source-map-support semver -g`
+   `sudo npm install forever fibers underscore source-map-support semver -g`
 
 4. Um ARSnova.click zu nutzen muss noch MongoDB installiert werden und kann von
    dem standard Debian-Repository installiert werden.
