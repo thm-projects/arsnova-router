@@ -12,9 +12,9 @@ echo "=== Install NodeJS ==="
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt-get install nodejs
 sudo npm install forever fibers underscore source-map-support semver -g
-cd ..
 npm install forever fibers underscore source-map-support semver
-cd arsnova-router
+sudo mv node_modules /home/arsnova
+sudo chown -R arsnova:arsnova /home/arsnova/node_modules
 
 # it is very importend this symlink is set, otherwise the application can not be
 # started
@@ -46,7 +46,9 @@ systemctl status nginx.service
 
 echo "=== Install ARSnova.click ==="
 wget https://git.thm.de/arsnova/arsnova.click/builds/artifacts/master/download?job=build -O artifacts.zip
-unzip artifacts.zip -d /home/arsnova
+unzip artifacts.zip -d .
+sudo mv build /home/arsnova/
+sudo chown -R arsnova:arsnova /home/arsnova/build
 rm artifacts.zip
 
 ## The content of this file need to be inside of the systemd start sccript
