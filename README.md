@@ -1,135 +1,39 @@
-# Installation mit Skript
+# Installieren des Systems
+## Raspbian
+  * Image `<Datum>-raspbian-<Version>.img` herunterladen
+  * Mit `sudo dd if=/dev/sdX of=<Pfad>/<Datum>-raspbian-<Version>.img` auf die
+    SD-Karte kopieren
+  * Das erste Laufwerk muss eingehängt werden mit `sudo mount /dev/sdX1
+    <Mountpunkt>`
+  * Es muss die Datei **ssh** angelegt werden mit `sudo touch <Mountpunkt>/ssh`.
+    Diese Datei ist wichtig, da sonst kein SSH Zugriff auf das Raspberry Pi
+    besteht.
+  * Nach dem schreiben der Datei kann die SD-Karte ausgehängt werden mit
+    `sudo umount <Mountpunkt>`.
+    Die SD-Karte kann jetzt mit dem Raspberry Pi verwendet werden.
+
+## Ubuntu 16.04.02
+Bei der installation muss sicher gestellt werden, dass der Benutzer
+`arsnova` angelegt wird und der Name des Rechners muss ebenfalls `arsnova`
+lautet.
+  * 
+
+# Installation von ARSnova.click mit dem Installationsskript
+
+## Raspbian
 ARSnova.click kann mit dem Installationsskript voll automatisch installiert
 werden. Dafür müssen die folgenden Schritte ausgeführt werden.
+  * `sudo apt-get update`
+  * `sudo apt-get insall git`
+  * `git clone https://git.thm.de/arsnova/arsnova-router.git`
+  * `cd arsnova-router`
+  * `./install_raspbian_jessie`
 
-   `sudo useradd -U -m -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio arsnova`
-
-   `echo -e "{Passwort}\n{Passwort}\n" | sudo passwd arsnova`
-
-   `su arsnova`
-
-   `cd` (Zum Wurzelverzeichniss von arsnova wechseln)
-
-   `sudo apt-get update`
-
-   `sudo apt-get insall git`
-
-   `git clone https://git.thm.de/arsnova/arsnova-router.git`
-
-   `cd arsnova-router`
-
-   `./install`
-
-# Manuelle Einrichtung eines Raspberry Pi mit ARSnova.click
-Hier wird erklärt wie ein Raspberry Pi mit ARSnova.click eingerichtet wird.
-Dabei wird Schritt für Schritt gezeigt was nötig ist für die Einrichtung.
-
-1. Aktuelles **Raspbian** herunterladen und auf SD-Larte aufspielen.
-
-2. Zuerst sollte das Raspberry Pi auf den aktuellsten Stand gebracht werden mit:
-
-   `sudo apt-get update`
-
-   `sudo apt-get install dnsmasq`
-
-   `sudo apt-get upgrade`
-
-   Ein Neustart des Systems ist erforderlich, wenn ein Kernelupdate
-   durchgeführt wurde mit `sudo reboot`.
-
-3. Als nächstes muss NodeJS installiert und eingerichtet werden.
-   Um die aktuellste Verison von NodeJS zu erhalten, muss das offizielle
-   Repository eingefügt werden.
-
-   `curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -`
-
-   `sudo apt-get update`
-
-   Nachdem das Repository erfolgreich eingefügt wurde, muss NodeJS installiert
-   werden.
-
-   `sudo apt-get install nodejs`
-
-   Jetzt müssen alle nötigen Erweiterungen NodeJS-Erweiterung installiert
-   werden.
-
-   `sudo npm install forever fibers underscore source-map-support semver -g`
-
-4. Um ARSnova.click zu nutzen muss noch MongoDB installiert werden und kann von
-   dem standard Debian-Repository installiert werden.
-
-   `sudo apt-get install mongodb'
-
-   Jetzt muss MongoDB gestartet werden.
-
-   `systemctl enable mongodb.service`
-
-   `systemctl start mongodb.service`
-
-    Es ist nötig die Datenbank einzurichten bevor der nächste Schritt
-    durchgeführt werden. Dafür muss man zuerst das Kommando `mongo` ausgeführt
-    werden und damit wird man in die MongoDB-Shell wechseln. In der
-    MongoDB-Shell folgende Kommandos ausgeführt werden.
-
-    `use arsnova_click`
-
-    `db.addUser({user:"meteor", pwd:"meteor", roles:["readWrite"]})`
-
-    `exit`
-
-    Wenn die Tabelle *arsnova_click* angelegt wurde, muss die MongoDB
-    neugestartet werden.
-
-    `systemctl restart mongodb.service`
-
-5. Als letztes muss Nginx installiert werden. Es muss mindestens die Version
-   1.10 installiert werden, da mit älteren Versionen wurde ARSnova.click nicht
-   getestet.
-   Im Repository von Rasbian, mit dem Image **2017-04-10-raspbian-jessie.img**,
-   ist nur die Version 1.6.2 zu finden. Um einen neuere Version zu installieren
-   müssen die Backports verwendet werden. Dazu muss die die Datei
-   `/etc/opt/sources.list.d/backports.list` angelegt werden und folgendes in die
-   Datei geschrieben werden.
-
-   `deb http://ftp.debian.org/debian jessie-backports main`
-
-   Jetzt muss dieses neue Repository apt bekannt gemacht werden.
-
-   `sudo apt-get update`
-
-   Es kann dazu kommen, dass bestimmte public keys fehlen. Wenn das nicht
-   zutrifft dann kann der nächste Schritt übersprungen werden.
-
-   `gpg --keyserver pgpkeys.mit.edu --recv-key  <public key>`
-
-   `gpg -a --export <public key> | sudo apt-key add -`
-
-   `sudo apt-get update`
-
-   Nach dem aktualisieren der Packetquellen kann das NodeJS-Packet installiert
-   werden.
-
-   `sudo apt-get -t jessie-backports install nginx-full`
-
-   Als nächstes muss Nginx konfiguriert werden. Dazu muss die
-   Konfigurationsdatei
-
-   `wget https://git.thm.de/arsnova/arsnova.click/raw/server-config/config/app-server/etc/nginx/sites-available/meteor`
-
-   `sudo mv meteor /etc/nginx/sites-available`
-
-   `ln -s /etc/nginx/sites-available/meteor /etc/nginx/sites-enabled/meteor`
-
-   `sudo rm  /etc/nginx/sites-enabled/default`
-
-6. Als letztes muss ARSnova.click vom Repository heruntergeladen werden.
-
-   `wget https://git.thm.de/arsnova/arsnova.click/builds/artifacts/master/download?job=build -O artifacts.zip`
-
-   `unzip artifacts.zip`
-
-   Nach dem entpacken von ARSnova.click muss die Konfigurations heruntergeladen
-   werden. Diese wird später im systemd Startskript benötigt.
-
-   `wget https://git.thm.de/arsnova/arsnova.click/raw/staging/arsnova.click/settings.json`
-
+## Ubuntu 16.04.02
+Bei der Installation muss das Skript `install_ubuntu_16.04.2` ausgeführt werden.
+Dafür muss das Repository geklont werden.
+  * `sudo apt-get update`
+  * `sudo apt-get install git`
+  * `git clone https://git.thm.de/arsnova/arsnova-router.git`
+  * `cd arsnova-router`
+  * `./install_ubuntu_16.04.2`
