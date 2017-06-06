@@ -1,0 +1,87 @@
+#!/bin/bash
+
+echo "=== Set right sudo premissions for systemd ==="
+# setze sudo rechte und keine passwort eingabe
+echo "arsnova ALL=(ALL) NOPASSWD: ALL" > 011_arsnova-nopasswd
+sudo chown root:root 011_arsnova-nopasswd
+sudo mv 011_arsnova-nopasswd /etc/sudoers.d/011_arsnova-nopasswd
+
+#-------------------------------------------------------------------------------
+echo "=== Install dependecies ==="
+# installieren von moeglichen fehlenden Packeten
+sudo apt-get update
+sudo apt-get install curl unzip
+
+echo "=== Install NodeJS ==="
+curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+sudo apt-get install nodejs
+
+# installiere nodejs Erweiterungspackete
+sudo npm install forever fibers underscore source-map-support semver -g
+npm install forever fibers underscore source-map-support semver
+sudo mv node_modules /home/arsnova
+sudo chown -R arsnova:arsnova /home/arsnova/node_modules
+
+# dieser symlink ist wichtig damit die Applikation ordentlich startet
+sudo ln -s /home/arsnova/build/bundle/programs/server/npm/node_modules/phantomjs/ /opt/phantomjs
+
+#-------------------------------------------------------------------------------
+echo "=== Install and configure MongoDB ==="
+sudo apt-get install mongodb
+sudo systemctl enable mongodb.service
+sudo systemctl start mongodb.service
+mongo < mongodb_config_v2.6.10.js
+sudo systemctl restart mongodb.service
+systemctl status mongodb.service
+
+echo "=== Install and configure Nginx ==="
+sudo useradd -m meteor
+sudo mkdir /home/meteor/logs
+sudo chown meteor:meteor /home/meteor/logs/
+
+# hole stable release von nginx
+sudo add-apt-repository ppa:nginx/stable
+sudo bash -c 'echo "deb http://ppa.launchpad.net/nginx/stable/ubuntu xenial main" > /etc/apt/sources.list.d/nginx.list'
+sudo bash -c 'echo "deb-src http://ppa.launchpad.net/nginx/stable/xenial" >> /etc/apt/sources.list.d/nginx.list'
+sudo apt-get update
+sudo apt-get install nginx-full
+
+# hole Konfiguration von nginx von arsnova.click
+wget https://git.thm.de/arsnova/arsnova.click/raw/server-config/config/app-server/etc/nginx/sites-available/meteor
+sed -i 's/yourdomain.com/\_/' meteor
+sudo mv meteor /etc/nginx/sites-available
+sudo ln -s /etc/nginx/sites-available/meteor /etc/nginx/sites-enabled/meteor
+sudo rm /etc/nginx/sites-enabled/default
+
+# starte nginx
+sudo systemctl enable nginx.service
+sudo systemctl start nginx.service
+systemctl status nginx.service
+
+echo "=== Install ARSnova.click ==="
+wget https://git.thm.de/arsnova/arsnova.click/builds/artifacts/master/download?job=build -O artifacts.zip
+unzip artifacts.zip -d .
+sudo mv build /home/arsnova/
+sudo chown -R arsnova:arsnova /home/arsnova/build
+rm artifacts.zip
+
+## The content of this file need to be inside of the systemd start sccript
+#wget https://git.thm.de/arsnova/arsnova.click/raw/staging/arsnova.click/settings.json
+##
+
+sudo cp usr/lib/systemd/system/arsnova-click.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable arsnova-click.service
+systemctl status arsnova-click.service
+sudo systemctl start arsnova-click.service
+systemctl status arsnova-click.service
+
+echo "=== Update system ==="
+sudo apt-get upgrade
+sudo apt-get dist-upgrade
+
+sudo cp etc/dhcpcd.conf /etc/
+
+# after the system update a reboot is recommended
+sudo reboot
+
