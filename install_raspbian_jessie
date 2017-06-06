@@ -18,9 +18,11 @@ sudo bash -c 'echo "arsnova" > /etc/hostname'
 sudo sed -i 's/raspberrypi/arsnova/' /etc/hosts
 sudo hostname arsnova
 
-# install maybe missing packages
+#-------------------------------------------------------------------------------
+echo "=== Install dependecies ==="
 sudo apt-get install curl unzip
 
+#-------------------------------------------------------------------------------
 echo "=== Install NodeJS ==="
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt-get install nodejs
@@ -35,6 +37,7 @@ sudo chown -R arsnova:arsnova /home/arsnova/node_modules
 # started
 sudo ln -s /home/arsnova/build/bundle/programs/server/npm/node_modules/phantomjs/ /opt/phantomjs
 
+#-------------------------------------------------------------------------------
 echo "=== Install and configure MongoDB ==="
 sudo apt-get install mongodb
 sudo systemctl enable mongodb.service
@@ -43,6 +46,7 @@ mongo < mongodb_config_v2.4.10.js
 sudo systemctl restart mongodb.service
 systemctl status mongodb.service
 
+#-------------------------------------------------------------------------------
 echo "=== Install and configure Nginx ==="
 sudo useradd -m meteor
 sudo mkdir /home/meteor/logs
@@ -59,6 +63,7 @@ sudo systemctl enable nginx.service
 sudo systemctl start nginx.service
 systemctl status nginx.service
 
+#-------------------------------------------------------------------------------
 echo "=== Install ARSnova.click ==="
 wget https://git.thm.de/arsnova/arsnova.click/builds/artifacts/master/download?job=build -O artifacts.zip
 unzip artifacts.zip -d .
@@ -77,6 +82,7 @@ systemctl status arsnova-click.service
 sudo systemctl start arsnova-click.service
 systemctl status arsnova-click.service
 
+#-------------------------------------------------------------------------------
 echo "=== Update Raspbian ==="
 sudo apt-get update
 sudo apt-get upgrade
