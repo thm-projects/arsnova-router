@@ -7,11 +7,12 @@ sudo chown root:root 011_arsnova-nopasswd
 sudo mv 011_arsnova-nopasswd /etc/sudoers.d/011_arsnova-nopasswd
 
 #-------------------------------------------------------------------------------
-echo "=== Install NodeJS ==="
-
+echo "=== Install dependecies ==="
 # installieren von moeglichen fehlenden Packeten
+sudo apt-get update
 sudo apt-get install curl unzip
 
+echo "=== Install NodeJS ==="
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt-get install nodejs
 
@@ -41,7 +42,7 @@ sudo chown meteor:meteor /home/meteor/logs/
 # hole stable release von nginx
 sudo add-apt-repository ppa:nginx/stable
 sudo apt-get update
-sudo apt-get installnginx-full
+sudo apt-get install nginx-full
 
 # hole Konfiguration von nginx von arsnova.click
 wget https://git.thm.de/arsnova/arsnova.click/raw/server-config/config/app-server/etc/nginx/sites-available/meteor
@@ -74,7 +75,6 @@ sudo systemctl start arsnova-click.service
 systemctl status arsnova-click.service
 
 echo "=== Update system ==="
-sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get dist-upgrade
 
