@@ -68,3 +68,9 @@ ARSnova.click kann mit dem Installationsskript voll automatisch installiert
 werden. Dafür müssen die folgenden Schritte ausgeführt werden.
   * `./install_elementary_os_0.4.1_loki`
 
+# TODO
+  * DNS installieren und einrichten.
+  * Statische IP Adresse anlegen in dhcpcd.conf, dass funktioniert zur Zeit nur
+    bei Raspbian.
+    Das wird für dnsmasq benötigt.
+

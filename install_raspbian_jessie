@@ -39,7 +39,7 @@ echo "=== Install and configure MongoDB ==="
 sudo apt-get install mongodb
 sudo systemctl enable mongodb.service
 sudo systemctl start mongodb.service
-mongo < mongodb_config.js
+mongo < mongodb_config_v2.4.10.js
 sudo systemctl restart mongodb.service
 systemctl status mongodb.service
 
