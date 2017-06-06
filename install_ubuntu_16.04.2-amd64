@@ -1,26 +1,16 @@
 #!/bin/bash
 
-
 echo "=== Set right sudo premissions for systemd ==="
-#read -p "Geben Sie das Passwort für den ARSnova Benutzer ein: " password
-#sudo useradd -U -m -G adm,sudo,plugdev arsnova
-#echo -e "$password\n$password\n" | sudo passwd arsnova
-
 # setze sudo rechte und keine passwort eingabe
 echo "arsnova ALL=(ALL) NOPASSWD: ALL" > 011_arsnova-nopasswd
 sudo chown root:root 011_arsnova-nopasswd
 sudo mv 011_arsnova-nopasswd /etc/sudoers.d/011_arsnova-nopasswd
 
-# hostname wird auf arsnova geaendert
-#sudo bash -c 'echo "arsnova" > /etc/hostname'
-#sudo sed -i 's/raspberrypi/arsnova/' /etc/hosts
-#sudo hostname arsnova
-
 #-------------------------------------------------------------------------------
 echo "=== Install NodeJS ==="
 
 # installieren von moeglichen fehlenden Packeten
-sudo apt-get install git curl unzip
+sudo apt-get install curl unzip
 
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt-get install nodejs
@@ -39,7 +29,7 @@ echo "=== Install and configure MongoDB ==="
 sudo apt-get install mongodb
 sudo systemctl enable mongodb.service
 sudo systemctl start mongodb.service
-mongo < mongodb_config.js
+mongo < mongodb_config_v2.6.10.js
 sudo systemctl restart mongodb.service
 systemctl status mongodb.service
 
