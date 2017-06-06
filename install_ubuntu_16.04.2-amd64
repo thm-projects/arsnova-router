@@ -40,7 +40,8 @@ sudo mkdir /home/meteor/logs
 sudo chown meteor:meteor /home/meteor/logs/
 
 # hole stable release von nginx
-sudo add-apt-repository ppa:nginx/stable
+sudo bash -c 'echo "deb http://ppa.launchpad.net/nginx/stable/ubuntu xenial main" > /etc/apt/sources.list.d/nginx.list'
+sudo bash -c 'echo "deb-src http://ppa.launchpad.net/nginx/stable/ubuntu xenial main" >> /etc/apt/sources.list.d/nginx.list'
 sudo apt-get update
 sudo apt-get install nginx-full
 
