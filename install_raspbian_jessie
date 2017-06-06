@@ -3,7 +3,11 @@
 echo "=== Add arsnova user and set right sudo premissions for systemd ==="
 #sudo useradd -U -m -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio arsnova
 sudo useradd -U -m -G adm,sudo,plugdev,netdev arsnova
+
+echo ""
 read -p "Geben Sie das Passwort für den ARSnova Benutzer ein: " password
+echo ""
+
 echo -e "$password\n$password\n" | sudo passwd arsnova
 echo "arsnova ALL=(ALL) NOPASSWD: ALL" > 011_arsnova-nopasswd
 sudo chown root:root 011_arsnova-nopasswd
@@ -13,6 +17,9 @@ sudo mv 011_arsnova-nopasswd /etc/sudoers.d/011_arsnova-nopasswd
 sudo bash -c 'echo "arsnova" > /etc/hostname'
 sudo sed -i 's/raspberrypi/arsnova/' /etc/hosts
 sudo hostname arsnova
+
+# install maybe missing packages
+sudo apt-get install curl unzip
 
 echo "=== Install NodeJS ==="
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
