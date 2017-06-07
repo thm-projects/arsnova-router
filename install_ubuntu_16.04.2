@@ -68,12 +68,16 @@ rm artifacts.zip
 #wget https://git.thm.de/arsnova/arsnova.click/raw/staging/arsnova.click/settings.json
 ##
 
-sudo cp usr/lib/systemd/system/arsnova-click.service /etc/systemd/system/
+sudo cp etc/systemd/system/arsnova-click.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable arsnova-click.service
 systemctl status arsnova-click.service
-sudo systemctl start arsnova-click.service
-systemctl status arsnova-click.service
+#sudo systemctl start arsnova-click.service
+#systemctl status arsnova-click.service
+
+echo "=== Copy arsnova.py ==="
+sudo cp bin/arsnova.py /bin
+sudo ln -s /bin/arsnova.py /bin/arsnova
 
 echo "=== Update system ==="
 sudo apt-get upgrade
