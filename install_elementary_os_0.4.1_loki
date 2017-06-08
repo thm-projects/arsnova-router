@@ -78,7 +78,7 @@ sudo systemctl daemon-reload
 echo "=== Copy arsnova.py ==="
 sudo cp bin/arsnova.py /bin
 sudo cp bin/arsnova /bin
-sudo usr/share/icons/cards_logo.png /usr/share/icons
+sudo cp usr/share/icons/cards_logo.png /usr/share/icons
 sudo cp usr/share/applications/arsnova.desktop /usr/share/applications/arsnova.desktop
 sudo cp -r usr/lib/python3/appJar /usr/lib/python3/
 
