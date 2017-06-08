@@ -68,18 +68,22 @@ rm artifacts.zip
 #wget https://git.thm.de/arsnova/arsnova.click/raw/staging/arsnova.click/settings.json
 ##
 
-sudo cp usr/lib/systemd/system/arsnova-click.service /etc/systemd/system/
+sudo cp etc/systemd/system/arsnova-click.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable arsnova-click.service
-systemctl status arsnova-click.service
-sudo systemctl start arsnova-click.service
-systemctl status arsnova-click.service
+#sudo systemctl enable arsnova-click.service
+#systemctl status arsnova-click.service
+#sudo systemctl start arsnova-click.service
+#systemctl status arsnova-click.service
+
+echo "=== Copy arsnova.py ==="
+sudo cp bin/arsnova.py /bin
+sudo cp bin/arsnova /bin
+ln -s /bin/arsnova /home/arsnova/arsnova
+sudo cp -r usr/lib/python3/appJar /usr/lib/python3/
 
 echo "=== Update system ==="
 sudo apt-get upgrade
 sudo apt-get dist-upgrade
-
-sudo cp etc/dhcpcd.conf /etc/
 
 # after the system update a reboot is recommended
 sudo reboot
