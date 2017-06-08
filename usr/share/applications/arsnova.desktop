@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=ARSnova
+Comment=ARSnova Start/Stop
+Exec=/bin/arsnova
+Icon=/usr/share/icons/cards_logo.png
+Terminal=false
+Type=Application
+Encoding=UTF-8
