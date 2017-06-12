@@ -20,7 +20,7 @@ sudo hostname arsnova
 
 #-------------------------------------------------------------------------------
 echo "=== Install dependecies ==="
-sudo apt-get install curl unzip
+sudo apt-get install curl unzip libjs-mathjx
 
 #-------------------------------------------------------------------------------
 echo "=== Install NodeJS ==="
