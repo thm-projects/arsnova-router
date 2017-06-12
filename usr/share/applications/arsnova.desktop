@@ -1,8 +1,8 @@
 [Desktop Entry]
 Name=ARSnova
 Comment=ARSnova Start/Stop
-Exec=/bin/arsnova/arsNovaClick-192.png
-Icon=/usr/share/icons/
+Exec=/bin/arsnova
+Icon=/usr/share/icons/arsNovaClick-192.png
 Terminal=false
 Type=Application
 Encoding=UTF-8
