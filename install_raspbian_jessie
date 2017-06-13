@@ -51,14 +51,17 @@ echo "=== Install and configure Nginx ==="
 sudo useradd -m meteor
 sudo mkdir /home/meteor/logs
 sudo chown meteor:meteor /home/meteor/logs/
+
 sudo bash -c 'echo "deb http://ftp.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/backports.list'
 sudo apt-get update
 sudo apt-get -t jessie-backports install nginx-full
+
 wget https://git.thm.de/arsnova/arsnova.click/raw/server-config/config/app-server/etc/nginx/sites-available/meteor
 sed -i 's/yourdomain.com/\_/' meteor
 sudo mv meteor /etc/nginx/sites-available
 sudo ln -s /etc/nginx/sites-available/meteor /etc/nginx/sites-enabled/meteor
 sudo rm /etc/nginx/sites-enabled/default
+
 sudo systemctl enable nginx.service
 sudo systemctl start nginx.service
 systemctl status nginx.service
@@ -75,7 +78,7 @@ rm artifacts.zip
 #wget https://git.thm.de/arsnova/arsnova.click/raw/staging/arsnova.click/settings.json
 ##
 
-sudo cp usr/lib/systemd/system/arsnova-click.service /etc/systemd/system/
+sudo cp etc/systemd/system/arsnova-click.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable arsnova-click.service
 systemctl status arsnova-click.service
