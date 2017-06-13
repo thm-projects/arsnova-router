@@ -73,4 +73,12 @@ werden. Dafür müssen die folgenden Schritte ausgeführt werden.
   * Statische IP Adresse anlegen in dhcpcd.conf, dass funktioniert zur Zeit nur
     bei Raspbian.
     Das wird für dnsmasq benötigt.
+  * Bei der Raspbian installation gibt es das Problem, dass die Konfiguration
+    von MongoDB nicht direkt ausgeführt werden kann. Es muss ca. 1 Minute
+    gewartet werden bevor die Datenbank Konfiguriert werden kann. Die Ursache
+    für dieses Problem ist nicht wirklich klar. Ein erarbeiteter Workaround ist
+    die Konfigurationsanweisung `mongo < mongo_config_v2.4.10.js` deutlich
+    nach dem starten der Datenbank zu verschieben. In der Datei
+    `install_rasbian_jessie` wurde diese Anweisung vor das Systemupdate
+    verschoben.
 
