@@ -42,8 +42,6 @@ echo "=== Install and configure MongoDB ==="
 sudo apt-get install mongodb
 sudo systemctl enable mongodb.service
 sudo systemctl start mongodb.service
-mongo < mongodb_config_v2.4.10.js
-sudo systemctl restart mongodb.service
 systemctl status mongodb.service
 
 #-------------------------------------------------------------------------------
@@ -82,6 +80,9 @@ sudo cp etc/systemd/system/arsnova-click.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable arsnova-click.service
 systemctl status arsnova-click.service
+
+# update mongodb
+mongo < mongodb_config_v2.4.10.js
 
 #-------------------------------------------------------------------------------
 echo "=== Update Raspbian ==="
