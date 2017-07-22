@@ -1,12 +1,16 @@
+# Paper zum Projekt
+
+["Strategien für die Bereitstellung eines skalierbaren Audience-Response-Systems: Vom ARS-Router bis zum Cloud-Deployment"](https://git.thm.de/arsnova/arsnova-router/raw/master/arsnova-delfi-paper-THM.pdf)
+
 # Hardwareaufbau
 Als Hardware kann ein Raspberry Pi oder ein handelsüblicher Rechner verwendet
 werden. Dabei muss nur der Aufbau der Hardware beachtet werden. Wichtig ist,
 dass bei der Installation eine Internetverbindung besteht, da Packete aus dem
 Packetmanager installiert werden.
 
-Bei normalen Betrieb nach der Installation wird keine Internetverbindung
-benötigt. Es muss ein geeigneter Router/Access Point verwendet werden und mit
-dem Rechner verbunden. Dann können Benutzer auf das ARSnova.click zugreifen und
+Bei normalem Betrieb nach der Installation wird keine Internetverbindung
+benötigt. Es muss ein geeigneter Router/Access Point verwendet und mit
+dem Rechner verbunden werden. Dann können Benutzer auf das ARSnova.click zugreifen und
 verwenden.
 
 # Installieren des Systems
@@ -26,13 +30,13 @@ verwenden.
 ## Ubuntu 16.04.02
 Bei der installation muss sicher gestellt werden, dass der Benutzer
 `arsnova` angelegt wird und der Name des Rechners muss ebenfalls `arsnova`
-lautet.
+lauten.
   * Für die Installaion siehe offizielle [Ubuntu Anleitung](https://www.ubuntu.com/download/desktop/install-ubuntu-desktop).
 
 ## Elementary OS 0.4.1 Loki
 Bei der installation muss sicher gestellt werden, dass der Benutzer
 `arsnova` angelegt wird und der Name des Rechners muss ebenfalls `arsnova`
-lautet.
+lauten.
   * Für die Installaion siehe offizielle [Elementary OS Anleitung](https://elementary.io/docs/installation#creating-an-installation-medium).
 
 # Installation von ARSnova.click mit dem Installationsskript
@@ -40,10 +44,10 @@ Bei der Installation muss sichergestellt werden, dass eine Internetverbindung
 besteht. Während der Installation werden Packete aus dem Internet geladen und
 installiert.
 
-Bevor eine Installation starten kann muss `git` installiert werden. Das kann mit
+Bevor eine Installation starten kann, muss `git` installiert werden. Das kann mit
 dem Packetmanager der gewählten Linuxdistribution gemacht werden. Bei Debian
 bassierten Distributionen wird `apt-get` verwendet. In der Regel müssen die
-Packetquellen aktualisiert werden bevor eine Packet installiert werden kann.
+Packetquellen aktualisiert werden, bevor eine Packet installiert werden kann.
   * `sudo apt-get update`
   * `sudo apt-get install git`
 
@@ -70,12 +74,12 @@ werden. Dafür müssen die folgenden Schritte ausgeführt werden.
 
 # TODO
   * DNS installieren und einrichten.
-  * Statische IP Adresse anlegen in dhcpcd.conf, dass funktioniert zur Zeit nur
+  * Statische IP Adresse anlegen in dhcpcd.conf, das funktioniert zur Zeit nur
     bei Raspbian.
     Das wird für dnsmasq benötigt.
   * Bei der Raspbian installation gibt es das Problem, dass die Konfiguration
     von MongoDB nicht direkt ausgeführt werden kann. Es muss ca. 1 Minute
-    gewartet werden bevor die Datenbank Konfiguriert werden kann. Die Ursache
+    gewartet werden, bevor die Datenbank konfiguriert werden kann. Die Ursache
     für dieses Problem ist nicht wirklich klar. Ein erarbeiteter Workaround ist
     die Konfigurationsanweisung `mongo < mongo_config_v2.4.10.js` deutlich
     nach dem starten der Datenbank zu verschieben. In der Datei
