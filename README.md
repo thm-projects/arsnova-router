@@ -1,6 +1,22 @@
-# Paper zum Projekt
+# ARSnova Router
+
+ARSnova Router delivers the ARSnova experience into classrooms that either have poor or no internet connection at all.
+
+With ARSnova Router, you "Bring Your Own Network" (BYON), with a local Wifi just for you and your students. You access ARSnova without outside interference for a fast, reliable, and secure experience.
+
+Please see our white paper for further details (currently german only):
 
 ["Strategien für die Bereitstellung eines skalierbaren Audience-Response-Systems: Vom ARS-Router bis zum Cloud-Deployment"](https://git.thm.de/arsnova/arsnova-router/raw/master/arsnova-delfi-paper-THM.pdf)
+
+-----------
+
+:construction: This README is currently under construction. :construction:
+
+-----------
+
+ARSnova Router consists of two parts: a Wifi "Router" to create the wireless infrastructure, and a "Server" hosting a local ARSnova installation. Throughout this README, we will refer to "Router" and "Server" to mean the Wifi router and the computer, respectively.
+
+This repository is for the technical setup of both the Wifi "Router" and the ARSnova "Server."
 
 # Hardwareaufbau
 Als Hardware kann ein Raspberry Pi oder ein handelsüblicher Rechner verwendet
@@ -62,27 +78,62 @@ ARSnova.click kann mit dem Installationsskript voll automatisch installiert
 werden. Dafür müssen die folgenden Schritte ausgeführt werden.
   * `./install_raspbian_jessie`
 
-## Ubuntu 16.04.02
-ARSnova.click kann mit dem Installationsskript voll automatisch installiert
-werden. Dafür müssen die folgenden Schritte ausgeführt werden.
-  * `./install_ubuntu_16.04.2`
-
 ## Elementary OS 0.4.1 Loki
 ARSnova.click kann mit dem Installationsskript voll automatisch installiert
 werden. Dafür müssen die folgenden Schritte ausgeführt werden.
   * `./install_elementary_os_0.4.1_loki`
 
-# TODO
-  * DNS installieren und einrichten.
-  * Statische IP Adresse anlegen in dhcpcd.conf, das funktioniert zur Zeit nur
-    bei Raspbian.
-    Das wird für dnsmasq benötigt.
-  * Bei der Raspbian installation gibt es das Problem, dass die Konfiguration
-    von MongoDB nicht direkt ausgeführt werden kann. Es muss ca. 1 Minute
-    gewartet werden, bevor die Datenbank konfiguriert werden kann. Die Ursache
-    für dieses Problem ist nicht wirklich klar. Ein erarbeiteter Workaround ist
-    die Konfigurationsanweisung `mongo < mongo_config_v2.4.10.js` deutlich
-    nach dem starten der Datenbank zu verschieben. In der Datei
-    `install_rasbian_jessie` wurde diese Anweisung vor das Systemupdate
-    verschoben.
+## Ubuntu 16.04.02
+ARSnova.click kann mit dem Installationsskript voll automatisch installiert
+werden. Dafür müssen die folgenden Schritte ausgeführt werden.
+  * `./install_ubuntu_16.04.2`
 
+# Intel NUC
+
+## DNS
+
+The NUC has a fixed IP address: `192.168.1.42`. This address is associated with the domain `arsnova.click.local`
+
+To set up the static IP, edit `/etc/network/interfaces`:
+
+> auto eno1
+> iface eno1 inet static
+> address 192.168.1.42
+> netmask 255.255.255.0
+> gateway 192.168.1.1
+
+`eno1` is the network interface (ethernet).
+
+```
+$ sudo apt-get install -y dnsmasq
+```
+
+/etc/hosts editieren:
+> 192.168.1.42	arsnova.click.local
+
+/etc/dnsmasq.conf editieren:
+> address=/arsnova.click.local/192.168.1.42
+> [...]
+> listen-address=127.0.0.1
+> listen-address=192.168.1.42
+
+```
+$ sudo service dnsmasq restart
+```
+
+Note that these settings have not been tested in the presence of a working Internet connection.
+
+## SSH
+
+```
+$ sudo apt-get install -y openssh-server
+```
+
+# TODO
+- [X] Install DNS server
+- [X] Install SSH server
+- [ ] Enable HTTPS for arsnova.click.local
+- [ ] Write configuration scripts based on this README (eg. for Puppet)
+
+## Old TODOs (may be deleted)
+-  Bei der Raspbian installation gibt es das Problem, dass die Konfiguration von MongoDB nicht direkt ausgeführt werden kann. Es muss ca. 1 Minute gewartet werden, bevor die Datenbank konfiguriert werden kann. Die Ursache für dieses Problem ist nicht wirklich klar. Ein erarbeiteter Workaround ist die Konfigurationsanweisung `mongo < mongo_config_v2.4.10.js` deutlich nach dem starten der Datenbank zu verschieben. In der Datei `install_rasbian_jessie` wurde diese Anweisung vor das Systemupdate verschoben.
