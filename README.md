@@ -88,11 +88,33 @@ ARSnova.click kann mit dem Installationsskript voll automatisch installiert
 werden. Dafür müssen die folgenden Schritte ausgeführt werden.
   * `./install_ubuntu_16.04.2`
 
-# Intel NUC
+# Alpha Bundle
 
-## DNS
+The "Alpha Bundle" is our first working prototype of ARSnova Router consisting of a Linksys WRT3200ACM (the *Router*) and an Intel NUC i7 (the *Server*).
 
-The NUC has a fixed IP address: `192.168.1.42`. This address is associated with the domain `arsnova.click.local`
+## Linksys WRT3200ACM
+
+We summarize the key settings:
+
+### Connectivity Tab
+
+- DHCP needs to be enabled with the IP range above 42, preferrably starting at 100.
+- As static DNS server, the *Server*'s IP needs to be put in
+
+### Security Tab
+
+- Enable simple port forwarding for port 53 (DNS) to the *Server*'s IP. This is required because otherwise, domain name resolution does not work reliably.
+
+## Intel NUC i7
+
+### DNS
+
+The NUC has a fixed IP address: `192.168.1.42`. This address is associated with the domains:
+
+* `arsnova.click.local`
+* `arsnova.voting.local`
+* `arsnova.local`
+* `arsnova`
 
 To set up the static IP, edit `/etc/network/interfaces`:
 
@@ -104,16 +126,16 @@ To set up the static IP, edit `/etc/network/interfaces`:
 
 `eno1` is the network interface (ethernet).
 
+Then, edit `/etc/hosts` to set up the domains:
+> 192.168.1.42    arsnova.click.local arsnova.voting.local arsnova.local arsnova
+
+Next, install and configure the DNS server:
+
 ```
 $ sudo apt-get install -y dnsmasq
 ```
 
-/etc/hosts editieren:
-> 192.168.1.42	arsnova.click.local
-
-/etc/dnsmasq.conf editieren:
-> address=/arsnova.click.local/192.168.1.42
-> [...]
+Edit /etc/dnsmasq.conf:
 > listen-address=127.0.0.1
 > listen-address=192.168.1.42
 
@@ -123,7 +145,9 @@ $ sudo service dnsmasq restart
 
 Note that these settings have not been tested in the presence of a working Internet connection.
 
-## SSH
+### SSH
+
+It suffices to install OpenSSH to enable SSH access:
 
 ```
 $ sudo apt-get install -y openssh-server
@@ -132,6 +156,7 @@ $ sudo apt-get install -y openssh-server
 # TODO
 - [X] Install DNS server
 - [X] Install SSH server
+- [ ] Install mDNS server (required to fix `.local` domains on Android and Linux)
 - [ ] Enable HTTPS for arsnova.click.local
 - [ ] Write configuration scripts based on this README (eg. for Puppet)
 
