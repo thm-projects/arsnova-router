@@ -1,0 +1,12 @@
+[Unit]
+Description=Start script for arsnova.voting
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/arsnova/docker
+ExecStart=/usr/local/bin/docker-compose -f /home/arsnova/docker/docker-compose.yml up
+ExecStop=/usr/local/bin/docker-compose -f /home/arsnova/docker/docker-compose.yml down
+
+[Install]
+WantedBy=multi-user.target

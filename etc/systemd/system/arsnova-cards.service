@@ -1,0 +1,20 @@
+[Unit]
+Description=Start script for arsnova.cards
+After=network.target
+
+[Service]
+Type=forking
+Environment=MONGO_URL=mongodb://meteor:meteor@localhost/meteor-cards-production
+Environment=NODE_ENV=production
+Environment=PORT=5000
+Environment=ROOT_URL=http://cards.arsnova.eu
+Environment='METEOR_SETTINGS={"public":{"rooturl":"http://localhost:5000","cas":{"loginUrl":"https://cas.thm.de/cas/login","serviceParam":"service","popupWidth":810,"popupHeight":610},"displayLoginButtons":{"displayFacebook":true,"displayTwitter":true,"displayGoogle":true,"displayCas":true},"leitner":{"dayIntervalHour":1},"university":{"singleUniversity":true,"default":"THM"},"env":"Sandbox","BT_MERCHANT_ID":"7jspbjz7zk4vkh67","BT_PUBLIC_KEY":"bf7p9crbdv2359gv"},"private":{"BT_PRIVATE_KEY":"b508f71a0e0b01940b0fbe75940debb9","FCM_API_KEY":"AAAAIST6Cb4:APA91bEazKYwihnbcAyqMaX_oNZvNlzoplnCKXpVtBKx-HfGqh9Oof9zufvxvcsINOxIs1guu9cUtXC1YGWFNIAJEDJN_vnc5xMqg1koTJd5bZ5jux3q2Qnstu4kiB_WrbehSPswvw_hIB-q-QNTmH0bVT1YTAXD3A"},"admin":{"name":"hg13345"},"facebook":{"api":"162760697401847","secret":"151daa9c4bc95310e9e1fb90accd70f8"},"twitter":{"api":"I8LcQC0NetusL9c5F3EFJUXMl","secret":"2z0kNAtYcSU5lQKk6FDRR60gxuFawB4TM7tWvnU7yKk6EHHpYh"},"google":{"api":"131328643116-j00jrgjupbbfeft1a9o0p5ling05vsus.apps.googleusercontent.com","secret":"2-P5Vy6VI0eOrKIlOCZZq8cR"},"cas":{"baseUrl":"https://cas.thm.de/cas","autoClose":true},"mail":{"senderAddress":"info@arsnova.cards","language":"de","url":"smtp://postmaster%40sandboxcc4938befa8447ca8c857cdf4b968653.mailgun.org:d07ea9c40ccbb21d268bbda17e9aad9d@smtp.mailgun.org:587"}}'
+WorkingDirectory=/home/arsnova/cards-build/build/bundle
+ExecStart=/bin/bash -c "/usr/bin/forever start --debug --pidFile /home/arsnova/cards.pid /home/arsnova/cards-build/build/bundle/main.js"
+ExecStop=/usr/bin/forever stop /home/arsnova/cards-build/build/bundle/main.js
+PIDFile=/home/arsnova/cards.pid
+User=arsnova
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
