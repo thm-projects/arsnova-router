@@ -20,11 +20,5 @@ then
 	RESET_STATUS=$?
 	echo "[$(date)]: Reloading DNS closed with status ${RESET_STATUS}."
 	echo "[$(date)]: DNS refresh finished."
-    else
-	echo "[$(date)]: Not connected to router. Try Pipeline update..."
-	cd pipeline
-	sh download.sh
-	cd ..
     fi
-
 fi
