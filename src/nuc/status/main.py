@@ -18,7 +18,7 @@ file(pidfile, 'w').write(pid)
 
 class ARSWindow(Gtk.Window):
 
-    def __init__(self, click_service, cards_service):
+    def __init__(self, click_service, cards_service, voting_service):
         Gtk.Window.__init__(self, title="ARSnova Router")
 	
 	self.click_service = click_service
@@ -30,6 +30,7 @@ class ARSWindow(Gtk.Window):
 
 	self.rowbox.pack_start(ARSServiceWidget(self, "arsnova.click", click_service).get_box(), True, True, 0)
 	self.rowbox.pack_start(ARSServiceWidget(self, "arsnova.cards", cards_service, update_enabled=False).get_box(), True, True, 0)
+	self.rowbox.pack_start(ARSServiceWidget(self, "arsnova.voting", voting_service, update_enabled=False).get_box(), True, True, 0)
 
 	self.votingLabel = Gtk.Label(label="arsnova.voting")
 
@@ -156,7 +157,7 @@ class ARSUpdateResult(object):
 	return "Error while updating"
 
 try:
-	window = ARSWindow(ARSService("click", PID_DIR), ARSService("cards", PID_DIR))
+	window = ARSWindow(ARSService("click", PID_DIR), ARSService("cards", PID_DIR), ARSService("voting", PID_DIR))
 	window.show_all()
 	window.connect("destroy", Gtk.main_quit)
 	Gtk.main()
