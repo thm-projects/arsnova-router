@@ -5,8 +5,9 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=/home/arsnova/docker
-ExecStart=/usr/local/bin/docker-compose -f /home/arsnova/docker/docker-compose.yml up
-ExecStop=/usr/local/bin/docker-compose -f /home/arsnova/docker/docker-compose.yml down
+ExecStart=/bin/bash -c "/usr/bin/touch /home/arsnova/voting.pid ; /usr/local/bin/docker-compose -f /home/arsnova/docker/docker-compose.yml up"
+ExecStop=/bin/bash -c "/usr/local/bin/docker-compose -f /home/arsnova/docker/docker-compose.yml down ; /bin/rm /home/arsnova/voting.pid"
+PIDFile=/home/arsnova/voting.pid
 
 [Install]
 WantedBy=multi-user.target
