@@ -18,7 +18,7 @@ file(pidfile, 'w').write(pid)
 
 class ARSWindow(Gtk.Window):
 
-    def __init__(self, click_service):
+    def __init__(self, click_service, cards_service):
         Gtk.Window.__init__(self, title="ARSnova Router")
 	
 	self.click_service = click_service
@@ -28,99 +28,81 @@ class ARSWindow(Gtk.Window):
 	self.rowbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)	
 	self.add(self.rowbox)
 
-	self.add_click_row()
-	#self.add_cards_row()
+	self.rowbox.pack_start(ARSServiceWidget(self, "arsnova.click", click_service).get_box(), True, True, 0)
+	self.rowbox.pack_start(ARSServiceWidget(self, "arsnova.cards", cards_service, update_enabled=False).get_box(), True, True, 0)
 
 	self.votingLabel = Gtk.Label(label="arsnova.voting")
 
-    def add_click_row(self):
-	self.clickBox = Gtk.Box(spacing=6)
-	self.rowbox.pack_start(self.clickBox, True, True, 5)
+class ARSServiceWidget(object):
 
-	self.clickLabel = Gtk.Label(label="arsnova.click")
-	self.clickBox.pack_start(self.clickLabel, True, True, 0)
-	self.clickStatusLabel = Gtk.Label(label=self.get_status_string("click"))
-	self.clickBox.pack_start(self.clickStatusLabel, True, True, 0)
+    def __init__(self, parent, name, service, update_enabled=True):
+	self.parent = parent
+	self.name = name
+	self.service = service
 
-        self.clickStart = Gtk.Button(label="Start")
-	self.clickStop = Gtk.Button(label="Stop")
-	self.clickCheckUpdate = Gtk.Button(label="Check for Update")
-	self.clickStart.connect("clicked", self.on_click_start_clicked)
-        self.clickStop.connect("clicked", self.on_click_stop_clicked)
-	self.clickCheckUpdate.connect("clicked", self.on_click_check_update_clicked)
-	self.clickBox.pack_start(self.clickStart, True, True, 0)
-        self.clickBox.pack_start(self.clickStop, True, True, 0)
-	self.clickBox.pack_start(self.clickCheckUpdate, True, True, 0)
+	self.box = Gtk.Box(spacing=6)
 
-    # TODO: Will get refactored into its own "Widget"
-    def add_cards_row(self):
-	self.cardsBox = Gtk.Box(spacing=6)
-	self.rowbox.pack_start(self.cardsBox, True, True, 0)
+	self.label = Gtk.Label(label=self.name)
+	self.box.pack_start(self.label, True, True, 0)
+	self.status_label = Gtk.Label(label=self.get_status_string())
+	self.box.pack_start(self.status_label, True, True, 0)
 
-	self.cardsLabel = Gtk.Label(label="arsnova.cards")
-	self.cardsBox.pack_start(self.cardsLabel, True, True, 0)
-	self.cardsStatusLabel = Gtk.Label(label=self.get_status_string("cards"))
-	self.cardsBox.pack_start(self.cardsStatusLabel, True, True, 0)
+        self.start = Gtk.Button(label="Start")
+	self.stop = Gtk.Button(label="Stop")
+	self.check_update = Gtk.Button(label="Check for Update")
+	self.start.connect("clicked", self.on_start_clicked)
+        self.stop.connect("clicked", self.on_stop_clicked)
+	self.check_update.connect("clicked", self.on_check_update_clicked)
+	self.check_update.set_sensitive(update_enabled)
+	self.box.pack_start(self.start, True, True, 0)
+        self.box.pack_start(self.stop, True, True, 0)
+	self.box.pack_start(self.check_update, True, True, 0)
 
-        self.cardsStart = Gtk.Button(label="Start")
-	self.cardsStop = Gtk.Button(label="Stop")
-	self.cardsCheckUpdate = Gtk.Button(label="Check for Update")
-	self.cardsStart.connect("clicked", self.on_cards_start_clicked)
-        self.cardsStop.connect("clicked", self.on_cards_stop_clicked)
-	self.cardsBox.pack_start(self.cardsStart, True, True, 0)
-        self.cardsBox.pack_start(self.cardsStop, True, True, 0)
-	self.cardsBox.pack_start(self.cardsCheckUpdate, True, True, 0)
+    def get_box(self):
+	return self.box
 
-    def on_click_start_clicked(self, widget):
-        self.click_service.start()
+    def on_start_clicked(self, widget):
+        self.service.start()
 	
-	if not self.click_service.is_running():
+	if not self.service.is_running():
 		self.error_status()
 	else:
 		self.refresh_status()
 
-    def on_click_stop_clicked(self, widget):
-        if self.click_service.stop():
+    def on_stop_clicked(self, widget):
+        if self.service.stop():
 		self.refresh_status()
 	else:
 		self.error_status()
 
-    def on_click_check_update_clicked(self, widget):
+    def on_check_update_clicked(self, widget):
 	# This is actually not drawn because we do updating on the main thread,
 	# blocking the UI update. ;-)
 	self.update_status()
 
-	result = self.click_service.update()
+	md = 1
+	result = self.service.update()
 	if result.is_okay():
-		md = Gtk.MessageDialog(self, Gtk.DialogFlags.MODAL, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, result.get_message())
-		md.run()
-		md.destroy()
-		self.refresh_status()
+		md = Gtk.MessageDialog(self.parent, Gtk.DialogFlags.MODAL, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, result.get_message())
 	else:
-		md = Gtk.MessageDialog(self, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, result.get_message())
-		md.run()
-		md.destroy()
-		self.error_status()
-
-    def on_cards_start_clicked(self, widget):
-        print("Start arsnova.cards")
-
-    def on_cards_stop_clicked(self, widget):
-        print("Stop arsnova.cards")
+		md = Gtk.MessageDialog(self.parent, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, result.get_message())
+	md.run()
+	md.destroy()
+	self.refresh_status()
 
     def refresh_status(self):
-	self.clickStatusLabel.set_label(self.get_status_string("click"))
+	self.status_label.set_label(self.get_status_string())
 
-    def get_status_string(self, serviceName):
-	if self.click_service.is_running():
+    def get_status_string(self):
+	if self.service.is_running():
 		return "RUNNING"
 	return "STOPPED"
 
     def error_status(self):
-	self.clickStatusLabel.set_label("ERROR")
+	self.status_label.set_label("ERROR")
 
     def update_status(self):
-	self.clickStatusLabel.set_label("UPDATING")
+	self.status_label.set_label("UPDATING")
 
 class ARSService(object):
 
@@ -174,7 +156,7 @@ class ARSUpdateResult(object):
 	return "Error while updating"
 
 try:
-    	window = ARSWindow(ARSService("click", PID_DIR))
+	window = ARSWindow(ARSService("click", PID_DIR), ARSService("cards", PID_DIR))
 	window.show_all()
 	window.connect("destroy", Gtk.main_quit)
 	Gtk.main()
