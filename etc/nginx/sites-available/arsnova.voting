@@ -1,0 +1,33 @@
+server {
+  listen 80;
+  #listen [::]:80;
+  server_name voting.arsnova.eu;
+
+  location = / { return 301 /mobile/; }
+  location = /arsnova-config { proxy_pass http://localhost:8080/api/configuration/; }
+  location /mobile { proxy_pass http://localhost:8080; }
+  # Serve MathJax locally. /mathjax will get appendend to the path.
+  # The final path on the disk will thus be /home/arsnova/arsnova/mathjax
+  location /mathjax { root /home/arsnova/arsnova/; }
+
+  location /api {
+    proxy_pass http://localhost:8080;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Port $server_port;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  location /socket.io {
+    proxy_pass http://localhost:8090;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $host;
+  }
+
+  access_log /home/arsnova/logs/voting.access.log;
+  error_log /home/arsnova/logs/voting.error.log error;
+}
