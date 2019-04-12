@@ -63,6 +63,22 @@ The script uploads a new DNS host file to the Router, so that the DNS entries ar
 
 ## Technical issues
 
-- [ ] Usage of HTTPS/WSS
-- [ ] Search bars of modern browsers discourage usage of short domains like "arsnova"
-- [ ] 
+### Usage of HTTPS/WSS
+
+Since we have a local network, we are unable to provide an official SSL certificate. Self-signed certificates are not an option anymore, because modern browsers display huge warning messages which kill usability and user experience.
+
+A possible solution would be to request an official certificate for the fake domains we use in the local network and then to install them on the Server. While this could work for the case of our single Alpha Bundle, a couple of issues arise in this scenario:
+
+1. Free certificates like "let's encrypt" are only valid for short periods of time. An update process would be necessary to renew the certificates in time, which would mean the NUC must be connected to the Internet before the certificate expires.
+2. Installing the certificates on the Server means to give up control. Effectively, the certificate is passed to a third-party. This is against the TOS of most certificate providers, including "let's encrypt." To counter this problem, the third-party would need to request their own certificates for the ARSnova domains.
+3. Every new Bundle would need its own certificate, so new subdomains are needed. Thinking about scale, these domain names will probably get increasingly user-unfriendly the more Bundles are produced.
+
+### On domain names
+
+It would be best to use short domain names like "arsnova". However, modern browsers have a search bar instead of an URL bar, which will interpret "arsnova" as a search term, not as a domain name. Only if the name is extended to, eg., "arsnova.eu", will it be correctly parsed and auto-completed to a URL.
+
+Using TLDs like "arsnova.eu" ties back to the problems of the previous section: If a user has ever visited "arsnova.eu" before, the certificate is stored in the browser. Any other certificate (or even a missing certificate) will cause the browser to display warnings. The domain name for the Bundle would thus have to be "fresh."
+
+# Credits
+
+ARSnova is powered by Technische Hochschule Mittelhessen - University of Applied Sciences.
