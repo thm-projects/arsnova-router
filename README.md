@@ -8,12 +8,6 @@ Please see our white paper for further details (currently german only):
 
 ["Strategien für die Bereitstellung eines skalierbaren Audience-Response-Systems: Vom ARS-Router bis zum Cloud-Deployment"](https://git.thm.de/arsnova/arsnova-router/raw/master/arsnova-delfi-paper-THM.pdf)
 
------------
-
-:construction: This README is currently under construction. :construction:
-
------------
-
 ARSnova Router consists of two parts: a Wifi "Router" to create the wireless infrastructure, and a "Server" hosting a local ARSnova installation. Throughout this README, we will refer to "Router" and "Server" to mean the Wifi router and the computer, respectively.
 
 This repository is for the technical setup of both the Wifi "Router" and the ARSnova "Server."
@@ -22,7 +16,14 @@ This repository is for the technical setup of both the Wifi "Router" and the ARS
 
 The "Alpha Bundle" is our first working prototype of ARSnova Router consisting of a Linksys WRT3200ACM (the *Router*) and an Intel NUC i7 (the *Server*).
 
-- [ ] Explain overall (technical) idea: users connect to Router through Wifi, redirects requests to NUC. NUC detects presence of Router, applies changes to the Router's DNS entries.
+In the following sections, we explain the technical details of our setup. Here is a short overview of how the Bundle should be used:
+
+Prerequisite: The Router and Server should be connected with a network cable. After booting both devices, the "ARSnova" wifi is available.
+
+1. Teachers announce wifi SSID and password, as well as the URL to ARSnova.
+2. Students connect to the wifi, and depending on the usage scenario, the teachers also connect their devices.
+3. Both parties point their browsers to the given URL to access ARSnova.
+4. ARsnova Voting contains the tagline "ARSnova Router", which allows users to verify they have a working connection.
 
 ## Usage scenarios
 
@@ -36,20 +37,25 @@ For this setup, Router and Server need to be wired up exactly as explained above
 
 ### Using a video projector
 
-It is also possible to directly present from the NUC by connecting it with a HDMI cable to the video projector. A mouse and keyboard are then necessary to control the browser.
+It is also possible to directly present from the NUC by connecting it with an HDMI cable to the video projector. A mouse and keyboard are then necessary to control the browser.
 
 ## Linksys WRT3200ACM
 
-- [ ] OpenWRT installation, details https://openwrt.org/toh/linksys/linksys_wrt3200acm
-- [ ] List of enabled services (DHCP, SSH, dnsmasq)
-- [ ] Wifi settings
-- [ ] Wiring of Router and Server using a LAN cable
+As our wifi router, we selected the Linksys WRT3200ACM, because it has a good wifi capacity. However, the OEM firmware allows only a very limited configuration. After experimenting with this firmware, we decided that it would be easier to use OpenWRT, which is open source and supports extensive configuration options.
+
+Details about installing OpenWRT can be found [at the project site](https://openwrt.org/toh/linksys/linksys_wrt3200acm). As of writing this document (spring 2019), the Router runs the LEDE branch of OpenWRT, release version 17.
+
+Three services need to be enabled in OpenWRT: DHCP, SSH, and DNS. We detail our usage of DNS in the next section since it depends on the interplay between Router and Server.
+
+For wifi, we found that best results are reached when only the "bng" network is activated (`radio 1`). Security should be enabled so that smartphones do not complain about the network being unencrypted.
+
+The Alpha Bundle contains a network cable to connect Router and Server, which is supposed to be plugged into the Router's port 1, ie. not the internet uplink port. Although the Server could also use the wifi connection, we think that the fewer clients use the network, the better the overall performance will be.
 
 ## Intel NUC i7
 
 ARSnova Voting is installed directly on the NUC following the official documentation. This means that the NUC contains an Apache CouchDB and runs Apache Tomcat to serve both ARSnova's backend and its mobile client.
 
-Voting is availabe at `voting.arsnova.eu`.
+Voting is available at `voting.arsnova.eu`.
 
 ### DNS
 
