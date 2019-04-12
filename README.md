@@ -53,12 +53,13 @@ Voting is availabe at `voting.arsnova.eu`.
 
 ### DNS
 
-The NUC should be usable as a regular desktop PC if not connected to the Router. This prohibits the usage of a static IP adress, even though this would make it a lot easier to work with the Router. This is because the network interface would need to be reset to DHCP in cases of regular Internet usage.
+The NUC should be usable as a regular desktop PC if not connected to the Router. This prohibits the usage of a static IP address, even though this would make it a lot easier to work with the Router. This is because the network interface would need to be reset to DHCP in cases of regular Internet usage.
 
-When set to DHCP, however, the Router could change the Server's IP adress at any time.
+When set to DHCP, however, the Router could change the Server's IP address at any time. This would mean that the domain records need to be changed accordingly.
 
-- [ ] IP change detection script
-- [ ] DNS update script
+The Server, therefore, monitors its own IP address and whenever a change is detected, and the Server is connected to the Router, a DNS change is initiated. This is implemented with a cron job that periodically invokes a script ([src/nuc/monitor_ip.sh](src/nuc/monitor_ip.sh)) to check for an IP address change.
+
+The script uploads a new DNS host file to the Router, so that the DNS entries are updated to the new IP address. The Router has a specific directory for this, which by default is configured to be at `/tmp/hosts`. We then send `dnsmasq` (the tool we use for DNS) the `HUP` signal, which forces it to re-read all host files. The advantage of this approach is that we do not need to restart DNS whenever we change the host files.
 
 ## Technical issues
 
