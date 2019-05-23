@@ -55,6 +55,8 @@ The Alpha Bundle contains a network cable to connect Router and Server, which is
 
 ARSnova Voting is installed directly on the NUC following the official documentation. This means that the NUC contains an Apache CouchDB and runs Apache Tomcat to serve both ARSnova's backend and its mobile client.
 
+The nginx configuration is available in the repository ([etc/nginx/sites-available/arsnova.voting](etc/nginx/sites-available/arsnova.voting)). It has built-in support for a local MathJax installation ([documented here](http://docs.mathjax.org/en/latest/installation.html#obtaining-mathjax-via-an-archive)), which has to be downloaded to the folder `/home/arsnova/arsnova/mathjax`. Note the `arsnova` subfolder inside the `arsnova` home directory, this is due to technical reasons. Also don't forget to update the path to Mathjax in ARSnova's properties file, which will be at http://voting.arsnova.eu/mathjax.
+
 Voting is available at `voting.arsnova.eu`.
 
 ### DNS
@@ -63,7 +65,9 @@ The NUC should be usable as a regular desktop PC if not connected to the Router.
 
 When set to DHCP, however, the Router could change the Server's IP address at any time. This would mean that the domain records need to be changed accordingly.
 
-The Server, therefore, monitors its own IP address and whenever a change is detected, and the Server is connected to the Router, a DNS change is initiated. This is implemented with a cron job that periodically invokes a script ([src/nuc/monitor_ip.sh](src/nuc/monitor_ip.sh)) to check for an IP address change.
+The Server, therefore, monitors its own IP address and whenever a change is detected, and the Server is connected to the Router, a DNS change is initiated. This is implemented with a cron job that periodically invokes a script ([src/nuc/monitor_ip.sh](src/nuc/monitor_ip.sh)) to check for an IP address change. This cron job is really simple and is invoked every minute:
+
+    * * * * * /bin/sh /home/arsnova/arsnova-router/src/nuc/monitor_ip.sh >/home/arsnova/dns.log 2>&1
 
 The script uploads a new DNS host file to the Router, so that the DNS entries are updated to the new IP address. The Router has a specific directory for this, which by default is configured to be at `/tmp/hosts`. We then send `dnsmasq` (the tool we use for DNS) the `HUP` signal, which forces it to re-read all host files. The advantage of this approach is that we do not need to restart DNS whenever we change the host files.
 
